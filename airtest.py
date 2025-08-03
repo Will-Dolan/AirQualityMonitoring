@@ -29,15 +29,20 @@ class PMSensor:
 
 		self.email, self.service = gcloud_init()
 		self.last_warn = time.time()-60
-		self.warn_delay = 60
+		self.warn_delay = 60 * 60 # 1 hr
 
 	def send_warn_email(self):
 		filename = datetime.now().strftime("%m-%d-%Y_%H-%M-%S")
 		path = 'figs/'+filename+'.png'
 		self.fig.savefig(path)
 
-		self.email.update_attachment(path)
-		self.email.send_email(self.service)
+		email = Email(
+			to_email=self.email.message['To'],
+			from_email=self.email.message['From'],
+			subject='Particulate Matter high'
+		)
+		email.update_attachment(path)
+		email.send_email(self.service)
 
 		self.last_warn = time.time()
 
