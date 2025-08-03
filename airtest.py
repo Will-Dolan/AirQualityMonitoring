@@ -74,12 +74,14 @@ class PMSensor:
 			print('warn email sent')
 
 	def run(self, show_plot=False):
+		print('Running...')
 		self.animation = FuncAnimation(
 			self.fig,
 			self.update,
 			cache_frame_data=False,
 			interval=200
 		)
+		print('Blocking...')
 		
 		if show_plot:
 			plt.show(block=True)
