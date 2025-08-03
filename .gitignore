@@ -2,3 +2,4 @@ env
 credentials.json
 secret.py
 token.json
+__pycache__

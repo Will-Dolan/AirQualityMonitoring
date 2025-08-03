@@ -1,5 +1,4 @@
 import serial
-from serial import SerialException
 from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -17,9 +16,6 @@ class PMSensor:
 			raise
 		except PermissionError:
 			print(f'Access to {port} not permitted. Grant user permissions to the device serial.')
-			raise
-		except SerialException as se:
-			print(se)
 			raise
 
 		self.readings25 = []
@@ -55,6 +51,7 @@ class PMSensor:
 		
 		print(f'pm2.5: {pm25}')
 		print(f'pm10: {pm10}')
+		print()
 		
 		return pm25, pm10
 
@@ -76,14 +73,22 @@ class PMSensor:
 			self.send_warn_email()
 			print('warn email sent')
 
-	def run(self):
+	def run(self, show_plot=False):
 		self.animation = FuncAnimation(
 			self.fig,
 			self.update,
 			cache_frame_data=False,
 			interval=200
 		)
-		plt.show()
+		
+		if show_plot:
+			plt.show(block=True)
+		else:
+			try:
+				while True:
+					time.sleep(1)
+			except KeyboardInterrupt:
+				print("Monitoring stopped")
 
 def main():
 	try:
